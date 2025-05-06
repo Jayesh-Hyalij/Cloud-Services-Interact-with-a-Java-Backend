@@ -67,3 +67,11 @@ This documentation provides an overview and instructions to understand, build, a
 ---
 ## Snapshots
 ![Screenshot](Assets/Screenshot%20(1).png)
+
+![Screenshot](Assets/Screenshot%20(2).png)
+
+![Screenshot](Assets/Screenshot%20(3).png)
+
+![Screenshot](Assets/Screenshot%20(4).png)
+
+![Screenshot](Assets/Screenshot%20(5).png)
