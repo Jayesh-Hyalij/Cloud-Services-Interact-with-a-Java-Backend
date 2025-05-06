@@ -66,4 +66,4 @@ This documentation provides an overview and instructions to understand, build, a
 
 ---
 ## Snapshots
-![Terraform Init](Assets/Screenshot (1).png)
+Assets/Screenshot (1).png
