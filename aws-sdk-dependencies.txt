@@ -1,0 +1,9 @@
+# Maven dependency snippet for AWS SDK v2 S3
+<dependency>
+  <groupId>software.amazon.awssdk</groupId>
+  <artifactId>s3</artifactId>
+  <version>2.20.19</version>  <!-- Use latest stable version -->
+</dependency>
+
+# Gradle dependency snippet for AWS SDK v2 S3
+implementation 'software.amazon.awssdk:s3:2.20.19'  // Use latest stable version
