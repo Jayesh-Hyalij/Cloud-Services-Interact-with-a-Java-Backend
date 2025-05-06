@@ -66,4 +66,4 @@ This documentation provides an overview and instructions to understand, build, a
 
 ---
 ## Snapshots
-![Screenshot](Assets/Screenshot(1).png)
+![Screenshot](Assets/Screenshot%20(1).png)
