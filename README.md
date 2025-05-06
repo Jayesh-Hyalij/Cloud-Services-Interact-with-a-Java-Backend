@@ -63,3 +63,7 @@ Hardcoding AWS credentials in source code is not recommended for production envi
 ---
 
 This documentation provides an overview and instructions to understand, build, and use the Customer KYC Application.
+
+---
+## Snapshots
+![Terraform Init](Assets/Screenshot (1).png)
