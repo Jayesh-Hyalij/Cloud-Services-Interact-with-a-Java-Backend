@@ -63,3 +63,15 @@ Hardcoding AWS credentials in source code is not recommended for production envi
 ---
 
 This documentation provides an overview and instructions to understand, build, and use the Customer KYC Application.
+
+---
+## Snapshots
+![Screenshot](Assets/Screenshot%20(1).png)
+
+![Screenshot](Assets/Screenshot%20(2).png)
+
+![Screenshot](Assets/Screenshot%20(3).png)
+
+![Screenshot](Assets/Screenshot%20(4).png)
+
+![Screenshot](Assets/Screenshot%20(5).png)
