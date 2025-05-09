@@ -2,16 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class CustomerKYCForm extends JFrame {
+    private static final Logger logger = Logger.getLogger(CustomerKYCForm.class.getName());
+
     private JTextField nameField;
     private JTextField mobileField;
     private JLabel aadhaarFileLabel;
@@ -75,8 +72,13 @@ public class CustomerKYCForm extends JFrame {
             JFileChooser fileChooser = new JFileChooser();
             int option = fileChooser.showOpenDialog(this);
             if (option == JFileChooser.APPROVE_OPTION) {
-                aadhaarFile = fileChooser.getSelectedFile();
-                aadhaarFileLabel.setText(aadhaarFile.getName());
+                File selectedFile = fileChooser.getSelectedFile();
+                if (isValidFileType(selectedFile)) {
+                    aadhaarFile = selectedFile;
+                    aadhaarFileLabel.setText(aadhaarFile.getName());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid file type. Please select a PDF, JPG, or PNG file.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -97,8 +99,13 @@ public class CustomerKYCForm extends JFrame {
             JFileChooser fileChooser = new JFileChooser();
             int option = fileChooser.showOpenDialog(this);
             if (option == JFileChooser.APPROVE_OPTION) {
-                panFile = fileChooser.getSelectedFile();
-                panFileLabel.setText(panFile.getName());
+                File selectedFile = fileChooser.getSelectedFile();
+                if (isValidFileType(selectedFile)) {
+                    panFile = selectedFile;
+                    panFileLabel.setText(panFile.getName());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid file type. Please select a PDF, JPG, or PNG file.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -111,19 +118,28 @@ public class CustomerKYCForm extends JFrame {
         panel.add(submitButton, gbc);
 
         submitButton.addActionListener(e -> {
+            submitButton.setEnabled(false);
             String name = nameField.getText().trim();
             String mobile = mobileField.getText().trim();
 
             if (name.isEmpty() || mobile.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter both name and mobile number.", "Error", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(true);
+                return;
+            }
+            if (!isValidMobileNumber(mobile)) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid 10-digit mobile number.", "Error", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(true);
                 return;
             }
             if (aadhaarFile == null) {
                 JOptionPane.showMessageDialog(this, "Please upload Aadhaar card.", "Error", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(true);
                 return;
             }
             if (panFile == null) {
                 JOptionPane.showMessageDialog(this, "Please upload PAN card.", "Error", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(true);
                 return;
             }
 
@@ -131,11 +147,13 @@ public class CustomerKYCForm extends JFrame {
             String[] nameParts = name.split("\\s+");
             if (nameParts.length < 2) {
                 JOptionPane.showMessageDialog(this, "Please enter both first and last name.", "Error", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(true);
                 return;
             }
             String folderName = nameParts[0] + "_" + nameParts[1];
 
             try {
+                logger.info("Starting file upload for folder: " + folderName);
                 s3Uploader.uploadFile(folderName, aadhaarFile);
                 s3Uploader.uploadFile(folderName, panFile);
 
@@ -146,12 +164,25 @@ public class CustomerKYCForm extends JFrame {
                                  "Files uploaded successfully to S3 folder: " + folderName;
 
                 JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+                logger.info("File upload successful for folder: " + folderName);
             } catch (IOException ex) {
+                logger.severe("File upload failed: " + ex.getMessage());
                 JOptionPane.showMessageDialog(this, "Failed to upload files: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                submitButton.setEnabled(true);
             }
         });
 
         add(panel);
+    }
+
+    private boolean isValidMobileNumber(String mobile) {
+        return Pattern.matches("\\d{10}", mobile);
+    }
+
+    private boolean isValidFileType(File file) {
+        String fileName = file.getName().toLowerCase();
+        return fileName.endsWith(".pdf") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png");
     }
 
     public static void main(String[] args) {
