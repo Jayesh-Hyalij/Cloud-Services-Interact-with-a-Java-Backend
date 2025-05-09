@@ -18,8 +18,8 @@ public class S3Uploader {
     private String bucketName = "stoic-customers-data"; // Your S3 bucket name
 
     public S3Uploader() {
-        String accessKey = "AKIASM6YNCLVM6UTDHWX";
-        String secretKey = "CxRLCrCEFte6N3A6TYEDVa5pPFgmfTqeNqzJavca";
+        String accessKey = "AccessKey"; // Replace with your access key
+        String secretKey = "secretKey"; // Replace with your secret key
 
         s3 = S3Client.builder()
                 .region(Region.AP_SOUTH_1) // Change to your region
